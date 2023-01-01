@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $competencias = \App\Models\Competencias::where('pagado', true)->get();
+    return view('welcome', compact('competencias'));
 });
 
 Auth::routes();
