@@ -1,5 +1,6 @@
-<form action="{{ route('competencias.store') }}" method="post">
+<form action="{{ route('fechas.store') }}" method="post">
     @csrf
+    <input type="hidden" name="competition" value="{{ $hash }}">
     <div class="row">
         <div class="col">
             <div class="form-group">
@@ -9,8 +10,16 @@
         </div>
         <div class="col">
             <div class="form-group">
-                <label for="">Fecha Término</label>
-                <input type="date" name="end" id="end" class="form-control" placeholder="">
+                <label for="">Hora</label>
+                <input type="time" name="time" id="time" class="form-control" placeholder="">
+            </div>
+        </div>
+    </div>
+    <div class="row col">
+        <div class="col">
+            <div class="form group">
+                <label for="">Descripcion</label>
+                <textarea name="description" id="description" cols="30" rows="10"></textarea>
             </div>
         </div>
     </div>

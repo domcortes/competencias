@@ -38,14 +38,19 @@
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmd($competencia->fecha_inicio) }}</td>
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmd($competencia->fecha_termino) }}</td>
                         <td>{!! \App\Http\Controllers\SystemController::getStatusButton($competencia->estado) !!}</td>
-                        <td>{!! \App\Http\Controllers\SystemController::getPublishButton($competencia->publicado) !!}</td>
+                        <td>{!! \App\Http\Controllers\SystemController::getPublishButton($competencia->publicado,'competencia') !!}</td>
                         <td>{{ \App\Http\Controllers\UserController::getUserName($competencia->created_by) }}</td>
                         <td>{{ \App\Http\Controllers\UserController::getUserName($competencia->updated_by) }}</td>
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmdHis($competencia->created_at) }}</td>
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmdHis($competencia->updated_at) }}</td>
                         <td>
                             <div class="btn-group btn-block">
-                                <button class="btn btn-info">Pagar</button>
+                                @if($competencia->pagado === 0)
+                                    <button class="btn btn-warning">Pagar</button>
+                                @else
+                                    <button class="btn btn-success">Pagado</button>
+                                @endif
+
                                 <a href="{{ route('competencias.show', \Vinkla\Hashids\Facades\Hashids::encode($competencia->id)) }}" class="btn btn-primary">Ver Competencia</a>
                             </div>
                         </td>

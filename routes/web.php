@@ -22,3 +22,11 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('competencias', \App\Http\Controllers\CompetenciasController::class);
+
+Route::resource('fechas', \App\Http\Controllers\FechasCompetenciasController::class);
+
+Route::resource('categorias', \App\Http\Controllers\CategoriasCompetenciaController::class);
+
+Route::group(['prefix' => 'ajax'], function(){
+    Route::post('publish', [\App\Http\Controllers\AjaxController::class, 'publishSwitch'])->name('ajax.publish');
+});

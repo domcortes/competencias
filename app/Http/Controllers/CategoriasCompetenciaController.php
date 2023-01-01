@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Competencias;
+use App\Models\CategoriasCompetencia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Vinkla\Hashids\HashidsManager;
 
-class CompetenciasController extends Controller
+class CategoriasCompetenciaController extends Controller
 {
     protected $hashids;
 
@@ -23,10 +22,7 @@ class CompetenciasController extends Controller
      */
     public function index()
     {
-        $competencias = Competencias::where('created_by', Auth::user()->id)
-            ->get();
-
-        return view('competencias.index', compact('competencias'));
+        //
     }
 
     /**
@@ -48,19 +44,19 @@ class CompetenciasController extends Controller
     public function store(Request $request)
     {
         try {
-            $competencia = new Competencias;
-            $competencia->nombre_competencia = $request->name;
-            $competencia->fecha_inicio = $request->start;
-            $competencia->fecha_termino = $request->end;
-            $competencia->valor_pago = 100;
-            $competencia->created_by = Auth::id();
-            $competencia->updated_by = Auth::id();
-            $competencia->save();
+            $categoria = new CategoriasCompetencia;
+            $categoria->id_competencia = $this->hashids->decode($request->competition)[0];
+            $categoria->nombre_categoria = $request->category;
+            $categoria->save();
 
-            return redirect()->route('competencias.index')->with('success', 'Competencia creada exitosamente.');
+            return redirect()
+                ->route('competencias.show', $request->competition)
+                ->with('success', 'Categoría creada exitosamente.');
         } catch (\Illuminate\Database\QueryException $exception){
             $errorInfo = $exception->errorInfo;
-            return redirect()->route('competencias.index')->with('error', $errorInfo[2]);
+            return redirect()
+                ->route('competencias.show', $request->competition)
+                ->with('error', $errorInfo[2]);
         }
     }
 
@@ -68,23 +64,11 @@ class CompetenciasController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    static public function show($id)
     {
-        $hash = $id;
-        $competenciaId = $this->hashids->decode($id)[0];
-        $competencia = Competencias::find($competenciaId);
-        $categorias = CategoriasCompetenciaController::show($competenciaId);
-        $fechas = FechasCompetenciasController::show($competenciaId);
-        return view('competencias.show',
-            compact(
-                'fechas',
-                'hash',
-                'categorias',
-                'competencia'
-            )
-        );
+        return CategoriasCompetencia::where('id_competencia', $id)->get();
     }
 
     /**

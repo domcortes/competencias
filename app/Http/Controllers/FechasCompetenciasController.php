@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\FechasCompetencias;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\HashidsManager;
 
 class FechasCompetenciasController extends Controller
 {
+    protected $hashids;
+
+    public function __construct(HashidsManager $hashids){
+        $this->hashids = $hashids;
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,11 +39,28 @@ class FechasCompetenciasController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $fecha = new FechasCompetencias;
+            $fecha->id_competencia = $this->hashids->decode($request->competition)[0];
+            $fecha->fecha = $request->start;
+            $fecha->hora = $request->time;
+            $fecha->publicado = true;
+            $fecha->descripcion = $request->description;
+            $fecha->save();
+
+            return redirect()
+                ->route('competencias.show', $request->competition)
+                ->with('success', 'Fecha creada exitosamente.');
+        } catch (\Illuminate\Database\QueryException $exception){
+            $errorInfo = $exception->errorInfo;
+            return redirect()
+                ->route('competencias.show', $request->competition)
+                ->with('error', $errorInfo[2]);
+        }
     }
 
     /**
@@ -44,7 +69,7 @@ class FechasCompetenciasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    static public function show($id)
     {
         return FechasCompetencias::where('id_competencia', $id)->get();
     }
