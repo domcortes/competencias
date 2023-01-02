@@ -14,6 +14,7 @@
             <thead>
             <tr class="text-center">
                 <th class="text-center">Nombre Categoria</th>
+                <th class="text-center">Cant. por equipo</th>
                 <th class="text-center">Publicado</th>
                 <th class="text-center">Creado</th>
                 <th class="text-center">Actualizado</th>
@@ -23,6 +24,7 @@
             @foreach ($categorias as $cat)
                 <tr>
                     <td class="text-center">{{ $cat->nombre_categoria }}</td>
+                    <td class="text-center">{{ $cat->cantidad_participantes }}</td>
                     <td class="text-center">{!! \App\Http\Controllers\SystemController::getPublishButton($cat->publicado,'categorias',\Vinkla\Hashids\Facades\Hashids::encode($cat->id)) !!}</td>
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmdHis($cat->created_at) }}</td>
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmdHis($cat->updated_at) }}</td>

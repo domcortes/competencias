@@ -1,12 +1,6 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
-$font-path: "../fonts";
-@font-face {
-    src: url("#{$font-path}/Share_Tech/ShareTech-Regular.ttf") format("ttf");
-    font-family: "ShareTech";
-}
-
 // Variables
 @import 'variables';
 

@@ -24,3 +24,7 @@
         </div>
     </div>
 @endsection
+
+@section('js')
+    @include('js.toastr')
+@endsection

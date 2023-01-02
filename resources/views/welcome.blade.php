@@ -9,7 +9,6 @@
             .nav-link {
                 color: white;
             }
-
         </style>
     </head>
     <body style="background-color: black">
@@ -48,6 +47,15 @@
                 @auth
                     <a href="{{ url('/home') }}" class="nav-link">Mi panel</a>
                 @else
+                    <div class="dropdown show">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Registar
+                        </a>
+                        <div class="dropdown-menu bg-gradient-dark" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{{ route('atletas.register') }}">Atletas</a>
+                            <a class="dropdown-item" href="{{ route('register') }}">Organizadores</a>
+                        </div>
+                    </div>
                     <a href="{{ route('login') }}" class="nav-link">Iniciar sesion</a>
                 @endauth
             </form>
@@ -56,7 +64,7 @@
         <div class="container" >
             <br>
             <div class="row">
-                <div class="col text-center">Listado de competencias disponibles</div>
+                <div class="col text-center presentation-text">Listado de competencias disponibles</div>
             </div>
             <hr>
             <div class="row">

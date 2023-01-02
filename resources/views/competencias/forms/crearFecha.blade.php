@@ -15,7 +15,19 @@
             </div>
         </div>
     </div>
-    <div class="row col">
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="">Modalidad</label>
+                <select name="modalidad" id="modalidad" class="form-control">
+                    <option selected value="online">Online</option>
+                    <option value="presencial">Presencial</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col">
             <div class="form group">
                 <label for="">Descripcion</label>

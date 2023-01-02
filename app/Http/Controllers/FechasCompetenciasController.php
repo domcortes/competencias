@@ -48,6 +48,7 @@ class FechasCompetenciasController extends Controller
             $fecha->id_competencia = $this->hashids->decode($request->competition)[0];
             $fecha->fecha = $request->start;
             $fecha->hora = $request->time;
+            $fecha->modalidad = $request->modalidad;
             $fecha->publicado = true;
             $fecha->descripcion = $request->description;
             $fecha->save();
@@ -106,5 +107,15 @@ class FechasCompetenciasController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * @param int $id
+     * @return int
+     *
+     */
+    static public function contadorFechas($id){
+        $fechas = FechasCompetencias::where('id_competencia', $id)->get();
+        return count($fechas);
     }
 }

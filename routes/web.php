@@ -31,3 +31,8 @@ Route::resource('categorias', \App\Http\Controllers\CategoriasCompetenciaControl
 Route::group(['prefix' => 'ajax'], function(){
     Route::post('publish', [\App\Http\Controllers\AjaxController::class, 'publishSwitch'])->name('ajax.publish');
 });
+
+Route::group(['prefix' => 'atletas'], function(){
+    Route::get('register', [\App\Http\Controllers\AtletasController::class, 'index'])->name('atletas.register');
+    Route::post('registrar', [\App\Http\Controllers\AtletasController::class, 'create'])->name('atletas.create');
+});

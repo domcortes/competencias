@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header bg-gradient-dark">
         <div class="row">
-            <div class="col"><span class="card-title">Listado fechas competencia</span></div>
+            <div class="col"><span class="card-title">Listado fechas competencia</span> - <small>(Fechas creadas: <strong>{{ \App\Http\Controllers\FechasCompetenciasController::contadorFechas($competenciaId)}}</strong>)</small></div>
             <div class="col">
                 <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalFecha">
                     Crear fecha
@@ -15,6 +15,7 @@
             <tr>
                 <th class="text-center">Fecha</th>
                 <th class="text-center">Hora</th>
+                <th class="text-center">Modalidad</th>
                 <th class="text-center">Descripcion</th>
                 <th class="text-center">Publicado</th>
                 <th class="text-center">Creado</th>
@@ -27,6 +28,7 @@
                 <tr>
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmd($date->fecha) }}</td>
                     <td class="text-center">{{ $date->hora }}</td>
+                    <td class="text-center">{{ ucfirst($date->modalidad) }}</td>
                     <td class="text-center">{{ $date->descripcion }}</td>
                     <td class="text-center">{!! \App\Http\Controllers\SystemController::getPublishButton($date->publicado,'fechas', \Vinkla\Hashids\Facades\Hashids::encode($date->id)) !!}</td>
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmdHis($date->created_at) }}</td>

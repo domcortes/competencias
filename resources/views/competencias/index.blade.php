@@ -20,6 +20,7 @@
                 <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Cant. Fechas</th>
                     <th>Inicio</th>
                     <th>Término</th>
                     <th>Estado</th>
@@ -35,10 +36,11 @@
                 @foreach ($competencias as $competencia)
                     <tr>
                         <td>{{ $competencia->nombre_competencia }}</td>
+                        <td class="text-center">{{ \App\Http\Controllers\FechasCompetenciasController::contadorFechas($competencia->id) }}</td>
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmd($competencia->fecha_inicio) }}</td>
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmd($competencia->fecha_termino) }}</td>
                         <td>{!! \App\Http\Controllers\SystemController::getStatusButton($competencia->estado) !!}</td>
-                        <td>{!! \App\Http\Controllers\SystemController::getPublishButton($competencia->publicado,'competencia') !!}</td>
+                        <td>{!! \App\Http\Controllers\SystemController::getPublishButton($competencia->publicado,'competencia',\Vinkla\Hashids\Facades\Hashids::encode($competencia->id)) !!}</td>
                         <td>{{ \App\Http\Controllers\UserController::getUserName($competencia->created_by) }}</td>
                         <td>{{ \App\Http\Controllers\UserController::getUserName($competencia->updated_by) }}</td>
                         <td>{{ \App\Http\Controllers\SystemController::dateFromYmdHis($competencia->created_at) }}</td>

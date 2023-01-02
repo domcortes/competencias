@@ -14,6 +14,7 @@ class CompetenciasController extends Controller
     public function __construct(HashidsManager $hashids){
         $this->hashids = $hashids;
         $this->middleware('auth');
+        $this->middleware('roles:organizador');
     }
 
     /**
@@ -82,7 +83,8 @@ class CompetenciasController extends Controller
                 'fechas',
                 'hash',
                 'categorias',
-                'competencia'
+                'competencia',
+                'competenciaId'
             )
         );
     }

@@ -47,6 +47,7 @@ class CategoriasCompetenciaController extends Controller
             $categoria = new CategoriasCompetencia;
             $categoria->id_competencia = $this->hashids->decode($request->competition)[0];
             $categoria->nombre_categoria = $request->category;
+            $categoria->cantidad_participantes = $request->quantity;
             $categoria->save();
 
             return redirect()
