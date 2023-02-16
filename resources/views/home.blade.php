@@ -17,7 +17,9 @@
                             </div>
                         @endif
 
-                        {{ __('You are logged in!') }}
+                        @if(auth()->user()->role === 'atleta')
+                            ¿Quieres inscribirte en una competencia? Revisa nuestro listado <a href="{{ route('main') }}">aqui</a>
+                        @endif
                     </div>
                 </div>
             </div>

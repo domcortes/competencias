@@ -94,7 +94,7 @@
                                 </p>
                             </div>
                             <div class="card-footer bg-dark border-0">
-                                <a href="" class="btn btn-block btn-primary">¡Quiero inscribirme!</a>
+                                <a href="{{ route('atletas.inscripcion', \Vinkla\Hashids\Facades\Hashids::encode($competencia->id)) }}" class="btn btn-block btn-primary">¡Quiero inscribirme!</a>
                             </div>
                         </div>
                     </div>

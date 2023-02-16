@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Competencias;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AtletasController extends Controller
 {
@@ -27,7 +29,8 @@ class AtletasController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        //$this->middleware('guest');
+        $this->middleware('auth')->only(['inscription']);
     }
 
     protected function validator(array $data)
@@ -126,5 +129,12 @@ class AtletasController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function inscription($hashCompetencia)
+    {
+        $idCompetencia = Hashids::decode($hashCompetencia);
+        $competencia = new CompetenciasAtletas();
+        return $competencia->show($idCompetencia[0]);
     }
 }

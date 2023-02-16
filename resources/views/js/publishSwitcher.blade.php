@@ -8,8 +8,6 @@
             line: $(this).attr('line')
         }
 
-        console.log(data)
-
         $.post(url, data)
         .done(function(response){
             if(response.result){
