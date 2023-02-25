@@ -13,6 +13,8 @@
     });
 
     function mercadoPagoButton (category, team_name) {
+        toastr.info('Estamos procesando los datos para generar el boton de pago... por favor espere...');
+
         let container = document.getElementById('cho-container').innerHTML = '';
 
         let url = '{{ route('ajax.mercado_pago') }}';

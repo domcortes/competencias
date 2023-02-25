@@ -21,5 +21,6 @@ class Teams extends Model
         'updated_at',
         'monto_pagado',
         'moneda_pago',
+        'team_name'
     ];
 }

@@ -315,6 +315,14 @@ return [
                 'organizador-menu'
             ],
         ],
+        [
+            'text'        => 'Mis competencias',
+            'url'         => '/atletas/mis-competencias-registradas',
+            'icon'        => 'fa-sharp fa-solid fa-flag-checkered',
+            'can' => [
+                'atleta-menu'
+            ],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',

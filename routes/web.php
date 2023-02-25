@@ -37,6 +37,7 @@ Route::group(['prefix' => 'atletas'], function(){
     Route::get('register', [\App\Http\Controllers\AtletasController::class, 'index'])->name('atletas.register');
     Route::post('registrar', [\App\Http\Controllers\AtletasController::class, 'create'])->name('atletas.create');
     Route::get('inscribir/{id_competencia}',[\App\Http\Controllers\AtletasController::class, 'inscription'])->name('atletas.inscripcion');
+    Route::get('mis-competencias-registradas',[\App\Http\Controllers\AtletasController::class, 'misCompetencias'])->name('atletas.competencias_registradas');
 });
 
 Route::resource('competencias-atletas',\App\Http\Controllers\CompetenciasAtletas::class);

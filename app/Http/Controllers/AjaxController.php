@@ -88,6 +88,11 @@ class AjaxController extends Controller
                     'message' => 'No existe una categoria segun los parametros, recarga la pagina e intenta nuevamente.'
                 ]);
         }
+
+        $team_name = ($categoria->cantidad_participantes > 1) ? $team_name : auth()->user()->name;
+
+        session(['team_name' => $team_name]);
+
         SDK::setAccessToken(env('MERCADOPAGO_TOKEN'));
         $preference = new Preference();
 
@@ -97,21 +102,21 @@ class AjaxController extends Controller
         $item->unit_price = $categoria->valor_inscripcion;
         $preference->back_urls = array(
             "success" => route('confirmation.mp.success', [
-                $categoria->id_competencia,
-                auth()->id(),
-                $categoria->id,
+                Hashids::encode($categoria->id_competencia),
+                Hashids::encode(auth()->id()),
+                Hashids::encode($categoria->id),
                 'true'
             ]),
             "failure" => route('confirmation.mp.failed', [
-                $categoria->id_competencia,
-                auth()->id(),
-                $categoria->id,
+                Hashids::encode($categoria->id_competencia),
+                Hashids::encode(auth()->id()),
+                Hashids::encode($categoria->id),
                 'false'
             ]),
             "pending" => route('confirmation.mp.pending', [
-                $categoria->id_competencia,
-                auth()->id(),
-                $categoria->id,
+                Hashids::encode($categoria->id_competencia),
+                Hashids::encode(auth()->id()),
+                Hashids::encode($categoria->id),
                 'pending'
             ])
         );

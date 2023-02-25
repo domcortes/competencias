@@ -29,7 +29,7 @@
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmd($date->fecha) }}</td>
                     <td class="text-center">{{ $date->hora }}</td>
                     <td class="text-center">{{ ucfirst($date->modalidad) }}</td>
-                    <td class="text-center">{{ $date->descripcion }}</td>
+                    <td class="text-center">{!! $date->descripcion !!}</td>
                     <td class="text-center">{!! \App\Http\Controllers\SystemController::getPublishButton($date->publicado,'fechas', \Vinkla\Hashids\Facades\Hashids::encode($date->id)) !!}</td>
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmdHis($date->created_at) }}</td>
                     <td class="text-center">{{ \App\Http\Controllers\SystemController::dateFromYmdHis($date->updated_at) }}</td>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Competencias;
+use App\Models\TeamsDetail;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -136,5 +138,15 @@ class AtletasController extends Controller
         $idCompetencia = Hashids::decode($hashCompetencia);
         $competencia = new CompetenciasAtletas();
         return $competencia->show($idCompetencia[0]);
+    }
+
+    public function misCompetencias(){
+
+        $competenciasDisponibles = Competencias::where('pagado', true)
+            ->where('termino_inscripciones', '>', Carbon::now()->format('Y-m-d'))
+            ->get();
+
+        $competenciasRegistradas = TeamsDetail::where('id_usuario', auth()->user()->id)->get();
+        return view('atletas.competencias.mis-competencias', compact('competenciasRegistradas','competenciasDisponibles'));
     }
 }

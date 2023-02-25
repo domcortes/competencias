@@ -15,7 +15,7 @@
             <div class="col-12">
                 <h4>
                     <i class="fas fa-globe"></i> Inscripción a {{ strtoupper($competencia->nombre_competencia) }}
-                    <small class="float-right">Date: 2/10/2014</small>
+                    <small class="float-right">Date: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</small>
                 </h4>
             </div>
 
@@ -23,13 +23,10 @@
 
         <div class="row invoice-info">
             <div class="col-sm-4 invoice-col">
-                From
+                Contacto Competencia:
                 <address>
-                    <strong>Admin, Inc.</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (804) 123-5432<br>
-                    Email: info@almasaeedstudio.com
+                    <strong>Nombre: </strong>{{ ucwords($organizador->name) }}<br>
+                    <strong>Email: </strong><a href="mailto:{{ $organizador->email }}?subject=Inscripción%20{{$dataPayment['collection_id']}}%20">{{ $organizador->email }}</a>
                 </address>
             </div>
 
@@ -39,11 +36,15 @@
                 @else
                     Atleta
                 @endif
-                Inscrito:
+                @if(isset($inscripcion))
+                    inscrito:
+                @else
+                    <strong>no </strong>inscrito:
+                @endif
                 <address>
                     <strong>{{ $atleta->name }}</strong><br>
                     Email: {{ $atleta->email }}<br>
-                    @if($inscripcion->status_pago === 1)
+                    @if($statusPago)
                         <span class="badge badge-success">Inscripcion pagada</span>
                     @else
                         <span class="badge badge-danger">Inscripción pendiente de pago</span>
@@ -51,14 +52,13 @@
                 </address>
             </div>
 
-            <div class="col-sm-4 invoice-col">
-                <b>Invoice #007612</b><br>
-                <br>
-                <b>Order ID:</b> 4F3S8J<br>
-                <b>Payment Due:</b> 2/22/2014<br>
-                <b>Account:</b> 968-34567
-            </div>
-
+            @isset($inscripcion)
+                <div class="col-sm-4 invoice-col">
+                    <b>Invoice #{{ $dataPayment['collection_id'] }}</b><br>
+                    <b>Tipo Pago: </b>{{ $dataPayment['payment_type'] }}<br>
+                    <br>
+                </div>
+            @endisset
         </div>
 
 
@@ -75,8 +75,19 @@
                     <tbody>
                         <tr>
                             <td>{{ $competencia->nombre_competencia }}</td>
-                            <td>{{ $categoria->nombre_categoria }} - <small>Hasta {{ $categoria->cantidad_participantes }} atleta(s) por inscripción</small></td>
-                            <td>${{ number_format($inscripcion->monto_pagado,2,',','.') }} {{ $inscripcion->moneda_pago }}</td>
+                            <td>
+                                {{ $categoria->nombre_categoria }} -
+                                <small>Hasta {{ $categoria->cantidad_participantes }} atleta(s) por inscripción
+                                    @if($dataPayment['status'] === 1)
+                                        <a href="">Ver detalle de inscripción</a>
+                                    @endif
+                                </small>
+                            </td>
+                            <td>
+                                @isset($inscripcion)
+                                    ${{ number_format($inscripcion->monto_pagado,2,',','.') }} {{ $inscripcion->moneda_pago }}
+                                @endisset
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -87,17 +98,28 @@
         <div class="row">
 
             <div class="col-6">
-                <p class="lead">Método de pago: <strong>{{ $inscripcion->medio_pago }}</strong></p>
+                @isset($inscripcion)
+                    <p class="lead">Método de pago: <strong>{{ $inscripcion->medio_pago }}</strong></p>
+                @endisset
             </div>
 
             <div class="col-6">
-                <p class="lead text-center">Fecha de Pago <strong>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $inscripcion->fecha_pago)->format('d-m-Y') }}</strong></p>
+                @isset($inscripcion)
+                    <p class="lead text-center">Fecha de Pago <strong>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $inscripcion->fecha_pago)->format('d-m-Y') }}</strong></p>
+                @endisset
                 <div class="table-responsive">
                     <table class="table">
                         <tbody>
                             <tr>
                                 <th>Total:</th>
-                                <td>${{ number_format($inscripcion->monto_pagado,2,',','.') }} {{ $inscripcion->moneda_pago }}</td>
+                                <td>
+                                    @if(isset($inscripcion))
+                                        $ {{ number_format($inscripcion->monto_pagado,2,',','.') }} {{ $inscripcion->moneda_pago }}
+                                    @else
+                                        $ 0.00
+                                    @endif
+
+                                </td>
                             </tr>
                         </tbody>
                     </table>

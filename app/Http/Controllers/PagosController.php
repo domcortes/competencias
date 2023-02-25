@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\CategoriasCompetencia;
 use App\Models\Competencias;
 use App\Models\Teams;
+use App\Models\TeamsDetail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class PagosController extends Controller
 {
@@ -24,9 +26,10 @@ class PagosController extends Controller
         $processing_mode = $_GET['processing_mode'];
         $merchant_account_id = $_GET['merchant_account_id'];
 
-        $competencia = Competencias::where('id', $idCompetencia)->first();
-        $atleta = User::where('id', $idAtleta)->first();
-        $categoria = CategoriasCompetencia::where('id', $idCategoria)->first();
+        $competencia = Competencias::where('id', Hashids::decode($idCompetencia)[0])->first();
+        $atleta = User::where('id', Hashids::decode($idAtleta)[0])->first();
+        $categoria = CategoriasCompetencia::where('id', Hashids::decode($idCategoria)[0])->first();
+        $organizador = User::find($competencia->created_by);
 
         ($categoria->cantidad_participantes > 1) ? $successMessage = 'Equipo registrado exitosamente': $successMessage = 'Atleta registrado exitosamente';
         ($categoria->cantidad_participantes > 1) ? $failedMessage = 'El equipo no pudo ser registrado en esta competencia': $failedMessage = 'El atleta no pudo ser registrado en esta competencia';
@@ -50,6 +53,7 @@ class PagosController extends Controller
 
         if($inscripcion !== null){
             $message = 'Ya te encuentras registrado para la competencia <strong>'.$competencia->nombre_competencia.'</strong>';
+            $statusPago = (boolean) $inscripcion->status_pago;
             $alertClass = 'alert-info';
 
             return view('pagos.mp',
@@ -60,7 +64,9 @@ class PagosController extends Controller
                     'message',
                     'alertClass',
                     'dataPayment',
-                    'inscripcion'
+                    'inscripcion',
+                    'organizador',
+                    'statusPago'
                 )
             );
             return redirect()->back()->with('info', 'Este equipo ya se encuentra registrado');
@@ -80,14 +86,24 @@ class PagosController extends Controller
                     'updated_at' => Carbon::now()->format('Y-m-d'),
                     'monto_pagado' => $categoria->valor_inscripcion,
                     'moneda_pago' => $categoria->moneda,
+                    'team_name' => session('team_name')
+                ]);
+
+                TeamsDetail::create([
+                    'id_usuario' => $atleta->id,
+                    'id_equipo' => $inscripcion->id,
+                    'id_competencia' => $competencia->id,
+                    'id_categoria' => $categoria->id
                 ]);
 
                 $message = $successMessage;
+                $statusPago = true;
                 $alertClass = 'alert-success';
                 break;
 
             case 'false';
                 $message = $failedMessage;
+                $statusPago = false;
                 $alertClass = 'alert-danger';
                 break;
 
@@ -99,11 +115,15 @@ class PagosController extends Controller
                     'status_pago' => false,
                     'fecha_inscripcion' => Carbon::now()->format('Y-m-d'),
                     'updated_at' => Carbon::now()->format('Y-m-d'),
+                    'team_name' => session('team_name')
                 ]);
                 $message = $pendingMessage;
+                $statusPago = false;
                 $alertClass = 'alert-info';
                 break;
         }
+
+        session()->forget('team_name');
 
         return view('pagos.mp',
             compact(
@@ -113,7 +133,9 @@ class PagosController extends Controller
                 'message',
                 'alertClass',
                 'dataPayment',
-                'inscripcion'
+                'inscripcion',
+                'organizador',
+                'statusPago'
             )
         );
     }

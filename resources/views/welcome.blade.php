@@ -94,7 +94,11 @@
                                 </p>
                             </div>
                             <div class="card-footer bg-dark border-0">
-                                <a href="{{ route('atletas.inscripcion', \Vinkla\Hashids\Facades\Hashids::encode($competencia->id)) }}" class="btn btn-block btn-primary">¡Quiero inscribirme!</a>
+                                @if($competencia->termino_inscripciones < \Carbon\Carbon::now()->format('Y-m-d'))
+
+                                @else
+                                    <a href="{{ route('atletas.inscripcion', \Vinkla\Hashids\Facades\Hashids::encode($competencia->id)) }}" class="btn btn-block btn-primary">¡Quiero inscribirme!</a>
+                                @endif
                             </div>
                         </div>
                     </div>
