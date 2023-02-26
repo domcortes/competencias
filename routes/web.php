@@ -31,6 +31,7 @@ Route::resource('categorias', \App\Http\Controllers\CategoriasCompetenciaControl
 Route::group(['prefix' => 'ajax'], function(){
     Route::post('publish', [\App\Http\Controllers\AjaxController::class, 'publishSwitch'])->name('ajax.publish');
     Route::post('mercado_pago', [\App\Http\Controllers\AjaxController::class, 'mercadoPagoObject'])->name('ajax.mercado_pago');
+    Route::post('paypal',[\App\Http\Controllers\AjaxController::class, 'paypalObject'])->name('ajax.paypal');
 });
 
 Route::group(['prefix' => 'atletas'], function(){
@@ -47,6 +48,11 @@ Route::group(['prefix' => 'payment'], function(){
         Route::get('success/{id_competencia}/{id_atleta}/{id_categoria}/{status}',[\App\Http\Controllers\PagosController::class, 'MercadoPagoPayment'])->name('confirmation.mp.success');
         Route::get('failed/{id_competencia}/{id_atleta}/{id_categoria}/{status}',[\App\Http\Controllers\PagosController::class, 'MercadoPagoPayment'])->name('confirmation.mp.failed');
         Route::get('pending/{id_competencia}/{id_atleta}/{id_categoria}/{status}',[\App\Http\Controllers\PagosController::class, 'MercadoPagoPayment'])->name('confirmation.mp.pending');
+    });
+
+    Route::group(['paypal'], function(){
+        Route::get('success/{id_competencia}/{id_atleta}/{id_categoria}',[\App\Http\Controllers\PagosController::class, 'PaypalPayment'])->name('confirmation.paypal.success');
+        Route::get('cancel/{id_competencia}/{id_atleta}/{id_categoria}',[\App\Http\Controllers\PagosController::class, 'PaypalPayment'])->name('confirmation.paypal.cancel');
     });
 });
 

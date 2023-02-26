@@ -48,17 +48,26 @@
                         <label for="">Nombre Equipo</label>
                         <input type="text" name="team_name" id="team_name" class="form-control" placeholder="Nombre Equipo" required>
                     </div>
+                    <div class="form-group">
+                        <label for="">Modo de Pago</label>
+                        <select name="paymentMethod" id="paymentMethod" class="form-control" >
+                            <option>Selecciona un medio de pago</option>
+                            <option value="mercadopago">MercadoPago</option>
+                            <option value="paypal">Paypal</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="card-footer">
             <div class="btn-group float-right">
                 <div class="cho-container" id="cho-container"></div>
+                <div class="cho-container-paypal" id="cho-container-paypal"></div>
             </div>
         </div>
     </div>
 @endsection
 
 @section('js')
-    @include('js.mercadopago');
+    @include('js.pagos');
 @endsection

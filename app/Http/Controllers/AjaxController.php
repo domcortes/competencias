@@ -133,4 +133,91 @@ class AjaxController extends Controller
             'amount' => $categoria->valor_inscripcion
         ]);
     }
+
+    public function paypalObject(Request $request){
+        $idCategoria = $request->category;
+        $competencia = $request->competition;
+        $team_name = $request->team_name;
+
+        if($team_name === null || $idCategoria === null){
+            return response()
+                ->json([
+                    'result' => false,
+                    'message' => 'No has seleccionado una categoria o ingresado el nombre de equipo. Completa los datos para continuar'
+                ]);
+        }
+
+        $categoria = CategoriasCompetencia::where('id', Hashids::decode($idCategoria)[0])
+            ->where('id_competencia', Hashids::decode($competencia)[0])
+            ->first();
+
+        if($categoria === null){
+            return response()
+                ->json([
+                    'result' => false,
+                    'message' => 'No existe una categoria segun los parametros, recarga la pagina e intenta nuevamente.'
+                ]);
+        }
+
+        $team_name = ($categoria->cantidad_participantes > 1) ? $team_name : auth()->user()->name;
+
+        session(['team_name' => $team_name]);
+
+        $apiContext = new \PayPal\Rest\ApiContext(
+            new \PayPal\Auth\OAuthTokenCredential(
+                env('PAYPAL_KEY'),     // ClientID
+                env('PAYPAL_TOKEN')
+            )
+        );
+
+        $payer = new \PayPal\Api\Payer();
+        $payer->setPaymentMethod('paypal');
+
+        $amount = new \PayPal\Api\Amount();
+        $amount->setTotal($categoria->valor_inscripcion);
+        $amount->setCurrency('USD');
+
+        $transaction = new \PayPal\Api\Transaction();
+        $transaction->setAmount($amount);
+
+        $redirectUrls = new \PayPal\Api\RedirectUrls();
+        $redirectUrls->setReturnUrl(
+            route('confirmation.paypal.success',
+                [
+                    Hashids::encode($categoria->id_competencia),
+                    Hashids::encode(auth()->id()),
+                    Hashids::encode($categoria->id),
+                ]
+            )
+        )->setCancelUrl(
+            route(
+                'confirmation.paypal.cancel',
+                [
+                    Hashids::encode($categoria->id_competencia),
+                    Hashids::encode(auth()->id()),
+                    Hashids::encode($categoria->id),
+                ]
+            )
+        );
+
+        $payment = new \PayPal\Api\Payment();
+        $payment->setIntent('sale')
+            ->setPayer($payer)
+            ->setTransactions(array($transaction))
+            ->setRedirectUrls($redirectUrls);
+
+        try {
+            $payment->create($apiContext);
+            return response()->json([
+                'result' => true,
+                'url' => $payment->getApprovalLink()
+            ]);
+        }
+        catch (\PayPal\Exception\PayPalConnectionException $ex) {
+            return response()->json([
+                'result' => false,
+                'message' => json_encode($ex->getData())
+            ]);
+        }
+    }
 }

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title','MercadoPago')
+@section('title','Pago confirmado con '.$paymentType)
 
 @section('content')
     <br>
@@ -26,7 +26,7 @@
                 Contacto Competencia:
                 <address>
                     <strong>Nombre: </strong>{{ ucwords($organizador->name) }}<br>
-                    <strong>Email: </strong><a href="mailto:{{ $organizador->email }}?subject=Inscripción%20{{$dataPayment['collection_id']}}%20">{{ $organizador->email }}</a>
+                    <strong>Email: </strong><a href="mailto:{{ $organizador->email }}?subject=Inscripción%20{{$inscriptionNumber}}%20">{{ $organizador->email }}</a>
                 </address>
             </div>
 
@@ -54,8 +54,8 @@
 
             @isset($inscripcion)
                 <div class="col-sm-4 invoice-col">
-                    <b>Invoice #{{ $dataPayment['collection_id'] }}</b><br>
-                    <b>Tipo Pago: </b>{{ $dataPayment['payment_type'] }}<br>
+                    <b>Invoice #{{ $inscriptionNumber }}</b><br>
+                    <b>Tipo Pago: </b>{{ $paymentType }}<br>
                     <br>
                 </div>
             @endisset
@@ -78,7 +78,7 @@
                             <td>
                                 {{ $categoria->nombre_categoria }} -
                                 <small>Hasta {{ $categoria->cantidad_participantes }} atleta(s) por inscripción
-                                    @if($dataPayment['status'] === 1)
+                                    @if($statusPago === 1)
                                         <a href="">Ver detalle de inscripción</a>
                                     @endif
                                 </small>
